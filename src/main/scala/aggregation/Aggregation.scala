@@ -5,23 +5,30 @@ import spire.syntax.nroot._
 import spire.sp
 import spire.algebra.{Field, Group, NRoot}
 
-case class SumOfSquaresAggregate[@sp T: Field](count: Int, sum: T, sumOfSquares: T) {
+case class SumOfSquaresAggregate[@sp T](n: Int, sum: T, sumOfSquares: T) {
 
-  def mean: T = sum / Field.fromInt(count)
+  def mean(implicit f: Field[T]): T = sum / n
+
+  def variance(implicit f: Field[T]): T = {
+    val mean = this.mean
+    (sumOfSquares / n - mean * mean)
+  }
+
+  def sampleVariance(implicit f: Field[T]): T = {
+    val n = Field.fromInt(this.n)
+    val mean = this.mean
+    (sumOfSquares / (n - 1) - mean * mean * n / (n - 1))
+  }
 
   /**
     * Population standard deviation
     */
-  def standardDeviation(implicit r: NRoot[T]): T = {
-    val n = Field.fromInt(count)
-    val mean = this.mean
-    (sumOfSquares / n - mean * mean).sqrt()
+  def standardDeviation(implicit r: NRoot[T], f: Field[T]): T = {
+    variance.sqrt()
   }
 
-  def sampleStandardDeviation(implicit r: NRoot[T]): T = {
-    val n = Field.fromInt(count)
-    val mean = this.mean
-    (sumOfSquares / (n - 1) - mean * mean * n / (n - 1)).sqrt()
+  def sampleStandardDeviation(implicit r: NRoot[T], f: Field[T]): T = {
+    sampleVariance.sqrt()
   }
 }
 
@@ -38,11 +45,11 @@ object SumOfSquaresAggregate {
     override def empty = SumOfSquaresAggregate.empty[T]
 
     override def inverse(a: SumOfSquaresAggregate[T]) =
-      SumOfSquaresAggregate(-a.count, -a.sum, -a.sumOfSquares)
+      SumOfSquaresAggregate(-a.n, -a.sum, -a.sumOfSquares)
 
     override def combine(x: SumOfSquaresAggregate[T], y: SumOfSquaresAggregate[T]) =
       SumOfSquaresAggregate(
-        x.count + y.count,
+        x.n + y.n,
         x.sum + y.sum,
         x.sumOfSquares + y.sumOfSquares)
   }
