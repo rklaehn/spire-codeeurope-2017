@@ -38,7 +38,7 @@ object GaussianGroupAggregate {
         val n: Int = a.n + b.n
         // m = m0 + (x - m0) / n
         // s = s0 + (x - m0) * (x - m)
-        val m1: T = (a.n * a.m + b.n * b.m) / n
+        val m1: T = a.m - (a.m * b.n + b.m * a.n) / n + b.m
         val s1: T = a.s + b.s + a.n * a.m * a.m + b.n * b.m * b.m - n * m1 * m1
         GaussianGroupAggregate(n, m1, s1)
       }

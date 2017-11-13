@@ -37,12 +37,12 @@ class Welford[@sp T](var n: Int, var m: T, var s: T) {
 
 object Welford {
 
-  def variance[@sp T: Field](values: Seq[T]): T = {
+  def variance[@sp T: Field](values: Seq[T]): (Int, T, T) = {
     val agg = Welford.create[T]()
     for(value <- values) {
       agg.add(value)
     }
-    return agg.variance
+    return (agg.n, agg.mean, agg.variance)
   }
 
   def create[@sp T: Field](): Welford[T] =

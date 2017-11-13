@@ -6,26 +6,37 @@ object SumOfSquaresAggregateTestApp extends App {
 
   def stats(values: Seq[Rational]): Unit = {
     val reference = values.map(SumOfSquaresAggregate.apply[Rational]).qcombine
+    val reference2 = values.map(GaussianGroupAggregate.apply[Rational]).qcombine
     val sos = values.map(x => SumOfSquaresAggregate(x.toDouble)).qcombine
     val gga = values.map(x => GaussianGroupAggregate(x.toDouble)).qcombine
-    val welford = Welford.variance(values.map(_.toDouble))
+    val (wn, wm, wv) = Welford.variance(values.map(_.toDouble))
 
     println("Sum of squares")
+    println(sos.mean)
     println(sos.variance)
 
     println("Gaussian group")
+    println(gga.mean)
     println(gga.variance)
 
     println("Welford")
-    println(welford)
+    println(wm)
+    println(wv)
 
     println("Reference")
+    println(reference.mean.toDouble)
     println(reference.variance.toDouble)
+
+    println("Reference")
+    println(reference2.mean.toDouble)
+    println(reference2.variance.toDouble)
   }
 
   val max = 10
   val values = (0 to max).map(x => Rational(x) / max + 1000000)
   stats(values)
+
+  stats((1 to 3).map(_.toRational()))
 //
 ////  val values = (1 to 3).map(_.toDouble)
 //  val aggregates = values.map(SumOfSquaresAggregate.apply[Double])
