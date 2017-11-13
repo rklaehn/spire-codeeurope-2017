@@ -1,10 +1,11 @@
 package aggregation
 
 import spire.algebra.Field
+import spire.sp
 import spire.syntax.field._
 
 // https://www.johndcook.com/blog/standard_deviation/
-class Welford[T](var n: Int, var m: T, var s: T) {
+class Welford[@sp T](var n: Int, var m: T, var s: T) {
 
   def mean = m
 
@@ -36,7 +37,7 @@ class Welford[T](var n: Int, var m: T, var s: T) {
 
 object Welford {
 
-  def variance[T: Field](values: Seq[T]): T = {
+  def variance[@sp T: Field](values: Seq[T]): T = {
     val agg = Welford.create[T]()
     for(value <- values) {
       agg.add(value)
@@ -44,7 +45,7 @@ object Welford {
     return agg.variance
   }
 
-  def create[T: Field](): Welford[T] =
+  def create[@sp T: Field](): Welford[T] =
     new Welford(0, Field.zero[T], Field.zero[T])
 
 }

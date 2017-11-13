@@ -36,6 +36,8 @@ object GaussianGroupAggregate {
     override def combine(a: GaussianGroupAggregate[T], b: GaussianGroupAggregate[T]) =
       if (a.n == 0) b else if (b.n == 0) a else {
         val n: Int = a.n + b.n
+        // m = m0 + (x - m0) / n
+        // s = s0 + (x - m0) * (x - m)
         val m1: T = (a.n * a.m + b.n * b.m) / n
         val s1: T = a.s + b.s + a.n * a.m * a.m + b.n * b.m * b.m - n * m1 * m1
         GaussianGroupAggregate(n, m1, s1)
