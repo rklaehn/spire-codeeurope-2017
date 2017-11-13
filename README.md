@@ -18,8 +18,8 @@ Here are the basics you will need for any scala development:
 
 Now you're ready to download and start using the starter project:
 
-1. `git clone https://github.com/rklaehn/spireworkshop2017`
-1. `cd spireworkshop2017`
+1. `git clone https://github.com/rklaehn/spire-codeeurope-2017`
+1. `cd spire-codeeurope-2017`
 1. `sbt test:compile`
 
 # Possible topics
