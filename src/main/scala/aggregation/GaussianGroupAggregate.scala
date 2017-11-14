@@ -49,7 +49,10 @@ object GaussianGroupAggregate {
         val n: Int = i + j
 
         // m = m0 + (x - m0) / n
-        val m: T = u + (v - u) * j / n // this now degenerates to the welford method for b.n == 1
+        // val m: T = u + (v - u) * j / n // this now degenerates to the welford method for b.n == 1
+
+        // weighted average of means
+        val m: T = (u * i + v * j) / n
 
         // s = s0 + (x - m0) * (x - m)
         // a.m == m0 == u
@@ -64,25 +67,37 @@ object GaussianGroupAggregate {
 
         // val s: T = x +         y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
 
-        // val s: T = x +         y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
+        // val s: T = x + y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
 
         // this one looks pretty good!
         // val f = - (i * j * (u - v) * (u - v) + (j + i) * y) / ((2 * j + i) * (u - v))
         // val s: T = x + f * (v - u + (v - u) * j / (i + j))
 
         // val f = (y + j * (u * u - 2 * u * v + v * v - i * y)) / ((v - u) * (v - u))
+        // val vu = v - u
+        // val s0 = x + y + i * u * u + j * v * v - n * m * m
+
+        // weighted sum of moments, remember x and y are pre-weighted
+        val s0 = x + y
+
+        // for the moment caused by the mean being different, only the difference matters
+        // it is crucial to calculate the result in terms of the difference to limit floating point errors
         val vu = v - u
-        val s0 = x + y + i * u * u + j * v * v - n * m * m
-        val s = if(!vu.isZero) {
-          val f = j + (1 - i * j) * y / (vu * vu)
-          x + f * (v - u) * (v - m)
-        } else {
-          s0
-        }
-        if(!(s -s0).isZero) {
-          println(s)
-          println(s0)
-        }
+
+        //
+        val sd = (i * j * vu * vu) / n
+        val s: T = s0 + sd // x + y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
+//        val s0 = x + y + i * u * u + j * v * v - n * m * m
+//        val s = if(!vu.isZero) {
+//          val f = j + (1 - i * j) * y / (vu * vu)
+//          x + f * (v - u) * (v - m)
+//        } else {
+//          s0
+//        }
+//        if(!(s -s0).isZero) {
+//          println(s)
+//          println(s0)
+//        }
 
         GaussianGroupAggregate(n, m, s)
       }
