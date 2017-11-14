@@ -2,8 +2,9 @@ package aggregation
 
 import spire.syntax.field._
 import spire.syntax.nroot._
+import spire.syntax.eq._
 import spire.sp
-import spire.algebra.{Field, Group, NRoot}
+import spire.algebra.{Field, Group, NRoot, Eq}
 
 case class SumOfSquaresAggregate[@sp T](n: Int, sum: T, sumOfSquares: T) {
 
@@ -53,4 +54,7 @@ object SumOfSquaresAggregate {
         x.sum + y.sum,
         x.sumOfSquares + y.sumOfSquares)
   }
+
+  implicit def eq[T: Eq]: Eq[SumOfSquaresAggregate[T]] =
+    Eq.instance((a, b) => a.n == b.n && a.sum === b.sum && a.sumOfSquares === b.sumOfSquares)
 }
