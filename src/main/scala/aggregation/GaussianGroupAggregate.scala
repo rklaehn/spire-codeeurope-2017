@@ -28,7 +28,7 @@ object GaussianGroupAggregate {
   def apply[@sp T: Field](value: T): GaussianGroupAggregate[T] =
     GaussianGroupAggregate(1, value, Field.zero[T])
 
-  implicit def group[T: Field]: Monoid[GaussianGroupAggregate[T]] = new Monoid[GaussianGroupAggregate[T]] {
+  implicit def group[T: Field: Eq]: Monoid[GaussianGroupAggregate[T]] = new Monoid[GaussianGroupAggregate[T]] {
 
     override def empty = GaussianGroupAggregate.empty[T]
 
@@ -38,24 +38,52 @@ object GaussianGroupAggregate {
     // this assumes that a.n >= b.n
     private def combine0(a: GaussianGroupAggregate[T], b: GaussianGroupAggregate[T]) =
       if (b.n == 0) a else {
-        val n: Int = a.n + b.n
+        val u = a.m
+        val x = a.s
+        val i = a.n
+
+        val v = b.m
+        val y = b.s
+        val j = b.n
+
+        val n: Int = i + j
 
         // m = m0 + (x - m0) / n
-        val m: T = a.m + (b.m - a.m) * b.n / n // this now degenerates to the welford method for b.n == 1
+        val m: T = u + (v - u) * j / n // this now degenerates to the welford method for b.n == 1
 
         // s = s0 + (x - m0) * (x - m)
-        // b.n == 1
-        // b.s == 0
-        // b.m == x
-
-        val as = a.s
-        val bs = b.s
-        val am = a.m
-        val bm = b.m
-        val an = a.n
-        val bn = b.n
+        // a.m == m0 == u
+        // a.s == s0 == x
+        // a.n       == i
+        // b.n == 1  == j
+        // b.s == 0  == y
+        // b.m == x  == v
         // as + bs + an * am * am + bn * bm * bm - n * m * m
-        val s: T = a.s + b.s + a.n * a.m * a.m + b.n * b.m * b.m - n * m * m
+        // x + y + i * u * u + j * v * v - n * m * m
+        // val s: T = x + y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
+
+        // val s: T = x +         y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
+
+        // val s: T = x +         y + i * u * u + j * v * v - (i + j) * (u + (v - u) * j / (i + j)) * (u + (v - u) * j / (i + j))
+
+        // this one looks pretty good!
+        // val f = - (i * j * (u - v) * (u - v) + (j + i) * y) / ((2 * j + i) * (u - v))
+        // val s: T = x + f * (v - u + (v - u) * j / (i + j))
+
+        // val f = (y + j * (u * u - 2 * u * v + v * v - i * y)) / ((v - u) * (v - u))
+        val vu = v - u
+        val s0 = x + y + i * u * u + j * v * v - n * m * m
+        val s = if(!vu.isZero) {
+          val f = j + (1 - i * j) * y / (vu * vu)
+          x + f * (v - u) * (v - m)
+        } else {
+          s0
+        }
+        if(!(s -s0).isZero) {
+          println(s)
+          println(s0)
+        }
+
         GaussianGroupAggregate(n, m, s)
       }
   }
