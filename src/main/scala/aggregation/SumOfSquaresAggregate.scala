@@ -15,5 +15,5 @@ object SumOfSquaresAggregate {
 
   implicit def eq[T]: Eq[SumOfSquaresAggregate[T]] = ???
 
-  implicit def group[T]: Group[SumOfSquaresAggregate[T]] = ???
+  implicit def monoid[T]: Monoid[SumOfSquaresAggregate[T]] = ???
 }
