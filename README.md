@@ -22,3 +22,7 @@ Now you're ready to download and start using the starter project:
 ## Exercises
 
 https://hackmd.io/s/B1t1ST5JM
+
+## Typeclass hierarchy (cats, algebra and spire)
+
+https://www.draw.io/?lightbox=1&target=blank&highlight=0000ff&edit=_blank&layers=1&nav=1&title=typeclass%20hierarchy#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Frklaehn%2Fspire-codeeurope-2017%2Fmaster%2Ftypeclass%2520hierarchy
