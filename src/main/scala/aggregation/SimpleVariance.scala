@@ -5,6 +5,7 @@ import spire.implicits._
 
 object SimpleVariance {
 
+  // exercise 1a
   /**
     * Takes a sequence of values and computes count, mean and variance
     */

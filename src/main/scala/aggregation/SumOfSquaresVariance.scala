@@ -5,6 +5,7 @@ import spire.implicits._
 
 object SumOfSquaresVariance {
 
+  // exercise 1b
   /**
     * Takes a sequence of values and computes count, mean and variance
     */
