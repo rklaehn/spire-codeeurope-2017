@@ -7,3 +7,5 @@ target/
 
 #Private tokens
 *.token
+
+*~
