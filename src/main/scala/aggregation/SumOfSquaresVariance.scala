@@ -1,6 +1,6 @@
 package aggregation
 
-import spire.syntax.all._
+import spire.algebra._
 import spire.implicits._
 
 object SumOfSquaresVariance {
