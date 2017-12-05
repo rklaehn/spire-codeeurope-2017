@@ -1,9 +1,6 @@
-# Exploring spire
+# Taming floating point numbers with spire and discipline
 
-This workshop is about exploring what spire has to offer. Since I agreed to
-do this on very short notice, just let me know what interests you.
-
-# Setting up the tooling
+## Setting up the tooling
 
 Here are the basics you will need for any scala development:
 
@@ -14,7 +11,7 @@ Here are the basics you will need for any scala development:
     [Windows](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Windows.html) \|
     [Mac](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Mac.html))
 
-# Downloading the code and the dependencies
+## Downloading the code and the dependencies
 
 Now you're ready to download and start using the starter project:
 
@@ -22,6 +19,6 @@ Now you're ready to download and start using the starter project:
 1. `cd spire-codeeurope-2017`
 1. `sbt test:compile`
 
-# Exercises
+## Exercises
 
 https://hackmd.io/s/B1t1ST5JM
