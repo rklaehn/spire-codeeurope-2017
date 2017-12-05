@@ -11,5 +11,9 @@ class SumOfSquaresAggregateLaws extends FunSuite with Discipline {
 
   implicit def arbSumOfSquaresAggregate[T: Arbitrary]: Arbitrary[SumOfSquaresAggregate[T]] = ???
 
+  // implicit def arbGaussianGroupAggregate[T: Arbitrary]: Arbitrary[GaussianGroupAggregate[T]] = ???
+
+  // implicit def arbStableGaussianGroupAggregate[T: Arbitrary]: Arbitrary[StableGaussianGroupAggregate[T]]
+  
   // checkAll("", thelaws)
 }
